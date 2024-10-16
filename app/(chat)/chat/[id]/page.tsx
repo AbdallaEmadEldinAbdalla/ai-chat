@@ -5,7 +5,7 @@ import { auth } from "@/app/(auth)/auth";
 import { Chat as PreviewChat } from "@/components/custom/chat";
 import { getChatById } from "@/db/queries";
 import { Chat } from "@/db/schema";
-import { convertToUIMessages, generateUUID } from "@/lib/utils";
+import { convertToUIMessages } from "@/lib/utils";
 
 export default async function Page({ params }: { params: any }) {
   const { id } = params;
@@ -31,5 +31,5 @@ export default async function Page({ params }: { params: any }) {
     return notFound();
   }
 
-  return <PreviewChat id={chat.id} initialMessages={chat.messages} />;
+  return <PreviewChat id={chat.id.toString()} initialMessages={chat.messages} />;
 }
