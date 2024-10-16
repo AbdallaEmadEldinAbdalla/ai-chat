@@ -74,7 +74,7 @@ export const History = ({ user }: { user: User | undefined }) => {
       success: () => {
         mutate((history) => {
           if (history) {
-            return history.filter((h) => h.id !== id);
+            return history.filter((h) => h.id !== parseFloat(id?.toString() ?? "0"));
           }
         });
         return "Chat deleted successfully";
@@ -169,7 +169,7 @@ export const History = ({ user }: { user: User | undefined }) => {
                     key={chat.id}
                     className={cx(
                       "flex flex-row items-center gap-6 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-md pr-2",
-                      { "bg-zinc-200 dark:bg-zinc-700": chat.id === id },
+                      { "bg-zinc-200 dark:bg-zinc-700": chat.id === parseFloat(id?.toString() ?? "0") },
                     )}
                   >
                     <Button
@@ -202,7 +202,7 @@ export const History = ({ user }: { user: User | undefined }) => {
                             className="flex flex-row gap-2 items-center justify-start w-full h-fit font-normal p-1.5 rounded-sm"
                             variant="ghost"
                             onClick={() => {
-                              setDeleteId(chat.id);
+                              setDeleteId(chat.id.toString());
                               setShowDeleteDialog(true);
                             }}
                           >
