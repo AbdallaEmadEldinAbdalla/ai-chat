@@ -43,12 +43,12 @@ export const login = async (
 
 export interface RegisterActionState {
   status:
-    | "idle"
-    | "in_progress"
-    | "success"
-    | "failed"
-    | "user_exists"
-    | "invalid_data";
+  | "idle"
+  | "in_progress"
+  | "success"
+  | "failed"
+  | "user_exists"
+  | "invalid_data";
 }
 
 export const register = async (

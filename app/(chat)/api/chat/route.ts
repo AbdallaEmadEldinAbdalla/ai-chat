@@ -1,5 +1,4 @@
 import { convertToCoreMessages, Message, streamText } from "ai";
-import { z } from "zod";
 
 import { customModel } from "@/ai";
 import { auth } from "@/app/(auth)/auth";
@@ -20,26 +19,27 @@ export async function POST(request: Request) {
   const result = await streamText({
     model: customModel,
     system:
-      "you are a friendly assistant! keep your responses concise and helpful.",
+      "You are a highly knowledgeable real estate assistant for properties in France. Your role is to help users find properties, provide real estate market data, and assist with legal and financial questions related to purchasing, renting, or selling homes. You should respond in a professional, helpful, and polite manner, using conversational language. Answer questions in French unless specified otherwise. Always offer clear and concise information about properties, market trends, tax regulations, and local real estate procedures.",
+    // `you are a friendly assistant! keep your responses concise and helpful.`,
     messages: coreMessages,
     maxSteps: 5,
-    tools: {
-      getWeather: {
-        description: "Get the current weather at a location",
-        parameters: z.object({
-          latitude: z.number(),
-          longitude: z.number(),
-        }),
-        execute: async ({ latitude, longitude }) => {
-          const response = await fetch(
-            `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m&hourly=temperature_2m&daily=sunrise,sunset&timezone=auto`,
-          );
+    // tools: {
+    //   getWeather: {
+    //     description: "Get the current weather at a location",
+    //     parameters: z.object({
+    //       latitude: z.number(),
+    //       longitude: z.number(),
+    //     }),
+    //     execute: async ({ latitude, longitude }) => {
+    //       const response = await fetch(
+    //         `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m&hourly=temperature_2m&daily=sunrise,sunset&timezone=auto`,
+    //       );
 
-          const weatherData = await response.json();
-          return weatherData;
-        },
-      },
-    },
+    //       const weatherData = await response.json();
+    //       return weatherData;
+    //     },
+    //   },
+    // },
     onFinish: async ({ responseMessages }) => {
       if (session.user && session.user.id) {
         try {

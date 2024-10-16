@@ -5,32 +5,61 @@ import { motion } from "framer-motion";
 import React, {
   useRef,
   useEffect,
-  useState,
   useCallback,
   Dispatch,
   SetStateAction,
-  ChangeEvent,
 } from "react";
 import { toast } from "sonner";
 
-import { ArrowUpIcon, PaperclipIcon, StopIcon } from "./icons";
-import { PreviewAttachment } from "./preview-attachment";
+import { ArrowUpIcon, StopIcon } from "./icons";
+// import { PreviewAttachment } from "./preview-attachment";
 import useWindowSize from "./use-window-size";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 
 const suggestedActions = [
   {
-    title: "What is the weather",
-    label: "in San Francisco?",
-    action: "What is the weather in San Francisco?",
+    title: "Montre-moi des propriétés",
+    label: "à Paris.",
+    action: "Montre-moi des propriétés à Paris.",
   },
   {
-    title: "Answer like I'm 5,",
-    label: "why is the sky blue?",
-    action: "Answer like I'm 5, why is the sky blue?",
+    title: "Quel est le loyer moyen",
+    label: "à Lyon ?",
+    action: "Quel est le loyer moyen à Lyon ?",
   },
+  {
+    title: "Comment faire une demande",
+    label: "de prêt immobilier en France ?",
+    action: "Comment faire une demande de prêt immobilier en France ?",
+  },
+  {
+    title: "Quelles sont les étapes légales",
+    label: "pour acheter une maison ?",
+    action: "Quelles sont les étapes légales pour acheter une maison ?",
+  },
+  {
+    title: "Montre-moi des appartements de luxe",
+    label: "disponibles à Nice.",
+    action: "Montre-moi des appartements de luxe disponibles à Nice.",
+  },
+  {
+    title: "Quel est le taux de la taxe foncière",
+    label: "à Marseille ?",
+    action: "Quel est le taux de la taxe foncière à Marseille ?",
+  },
+  {
+    title: "Planifie une visite",
+    label: "de propriétés à Bordeaux.",
+    action: "Planifie une visite de propriétés à Bordeaux.",
+  },
+  {
+    title: "Peux-tu m'aider à trouver",
+    label: "des agents immobiliers ?",
+    action: "Peux-tu m'aider à trouver des agents immobiliers ?",
+  }
 ];
+
 
 export function MultimodalInput({
   input,
@@ -82,8 +111,8 @@ export function MultimodalInput({
     adjustHeight();
   };
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
+  // const fileInputRef = useRef<HTMLInputElement>(null);
+  // const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
   const submitForm = useCallback(() => {
     handleSubmit(undefined, {
@@ -97,66 +126,65 @@ export function MultimodalInput({
     }
   }, [attachments, handleSubmit, setAttachments, width]);
 
-  const uploadFile = async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
+  // const uploadFile = async (file: File) => {
+  //   const formData = new FormData();
+  //   formData.append("file", file);
 
-    try {
-      const response = await fetch(`/api/files/upload`, {
-        method: "POST",
-        body: formData,
-      });
+  //   try {
+  //     const response = await fetch(`/api/files/upload`, {
+  //       method: "POST",
+  //       body: formData,
+  //     });
 
-      if (response.ok) {
-        const data = await response.json();
-        const { url, pathname, contentType } = data;
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       const { url, pathname, contentType } = data;
 
-        return {
-          url,
-          name: pathname,
-          contentType: contentType,
-        };
-      } else {
-        const { error } = await response.json();
-        toast.error(error);
-      }
-    } catch (error) {
-      toast.error("Failed to upload file, please try again!");
-    }
-  };
+  //       return {
+  //         url,
+  //         name: pathname,
+  //         contentType: contentType,
+  //       };
+  //     } else {
+  //       const { error } = await response.json();
+  //       toast.error(error);
+  //     }
+  //   } catch (error) {
+  //     toast.error("Failed to upload file, please try again!");
+  //   }
+  // };
 
-  const handleFileChange = useCallback(
-    async (event: ChangeEvent<HTMLInputElement>) => {
-      const files = Array.from(event.target.files || []);
+  // const handleFileChange = useCallback(
+  //   async (event: ChangeEvent<HTMLInputElement>) => {
+  //     const files = Array.from(event.target.files || []);
 
-      setUploadQueue(files.map((file) => file.name));
+  //     setUploadQueue(files.map((file) => file.name));
 
-      try {
-        const uploadPromises = files.map((file) => uploadFile(file));
-        const uploadedAttachments = await Promise.all(uploadPromises);
-        const successfullyUploadedAttachments = uploadedAttachments.filter(
-          (attachment) => attachment !== undefined,
-        );
+  //     try {
+  //       const uploadPromises = files.map((file) => uploadFile(file));
+  //       const uploadedAttachments = await Promise.all(uploadPromises);
+  //       const successfullyUploadedAttachments = uploadedAttachments.filter(
+  //         (attachment) => attachment !== undefined,
+  //       );
 
-        setAttachments((currentAttachments) => [
-          ...currentAttachments,
-          ...successfullyUploadedAttachments,
-        ]);
-      } catch (error) {
-        console.error("Error uploading files!", error);
-      } finally {
-        setUploadQueue([]);
-      }
-    },
-    [setAttachments],
-  );
+  //       setAttachments((currentAttachments) => [
+  //         ...currentAttachments,
+  //         ...successfullyUploadedAttachments,
+  //       ]);
+  //     } catch (error) {
+  //       console.error("Error uploading files!", error);
+  //     } finally {
+  //       setUploadQueue([]);
+  //     }
+  //   },
+  //   [setAttachments],
+  // );
 
   return (
     <div className="relative w-full flex flex-col gap-4">
       {messages.length === 0 &&
-        attachments.length === 0 &&
-        uploadQueue.length === 0 && (
-          <div className="grid sm:grid-cols-2 gap-2 w-full md:px-0 mx-auto md:max-w-[500px]">
+        attachments.length === 0 && (
+          <div className="grid sm:grid-cols-2 gap-2 w-full md:px-0 mx-auto md:max-w-[700px]">
             {suggestedActions.map((suggestedAction, index) => (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -185,16 +213,16 @@ export function MultimodalInput({
           </div>
         )}
 
-      <input
+      {/* <input
         type="file"
         className="fixed -top-4 -left-4 size-0.5 opacity-0 pointer-events-none"
         ref={fileInputRef}
         multiple
         onChange={handleFileChange}
         tabIndex={-1}
-      />
+      /> */}
 
-      {(attachments.length > 0 || uploadQueue.length > 0) && (
+      {/* {(attachments.length > 0 || uploadQueue.length > 0) && (
         <div className="flex flex-row gap-2 overflow-x-scroll">
           {attachments.map((attachment) => (
             <PreviewAttachment key={attachment.url} attachment={attachment} />
@@ -212,11 +240,11 @@ export function MultimodalInput({
             />
           ))}
         </div>
-      )}
+      )} */}
 
       <Textarea
         ref={textareaRef}
-        placeholder="Send a message..."
+        placeholder="Envoyer un message..."
         value={input}
         onChange={handleInput}
         className="min-h-[24px] overflow-hidden resize-none rounded-lg text-base bg-muted"
@@ -251,13 +279,13 @@ export function MultimodalInput({
             event.preventDefault();
             submitForm();
           }}
-          disabled={input.length === 0 || uploadQueue.length > 0}
+          disabled={input.length === 0}
         >
           <ArrowUpIcon size={14} />
         </Button>
       )}
 
-      <Button
+      {/* <Button
         className="rounded-full p-1.5 h-fit absolute bottom-2 right-10 m-0.5 dark:border-zinc-700"
         onClick={(event) => {
           event.preventDefault();
@@ -267,7 +295,7 @@ export function MultimodalInput({
         disabled={isLoading}
       >
         <PaperclipIcon size={14} />
-      </Button>
+      </Button> */}
     </div>
   );
 }
