@@ -44,7 +44,7 @@ export async function saveChat({
   userId: string;
 }) {
   try {
-    const selectedChats = await db.select().from(chat).where(eq(chat.id, id));
+    const selectedChats = await db.select().from(chat).where(eq(chat.id as any, id));
 
     if (selectedChats.length > 0) {
       return await db
@@ -52,11 +52,11 @@ export async function saveChat({
         .set({
           messages: JSON.stringify(messages),
         })
-        .where(eq(chat.id, id));
+        .where(eq(chat.id as any, id));
     }
 
     return await db.insert(chat).values({
-      id,
+      id: id as any,
       createdAt: new Date(),
       messages: JSON.stringify(messages),
       userId,
@@ -69,7 +69,7 @@ export async function saveChat({
 
 export async function deleteChatById({ id }: { id: string }) {
   try {
-    return await db.delete(chat).where(eq(chat.id, id));
+    return await db.delete(chat).where(eq(chat.id as any, id));
   } catch (error) {
     console.error("Failed to delete chat by id from database");
     throw error;
@@ -91,7 +91,7 @@ export async function getChatsByUserId({ id }: { id: string }) {
 
 export async function getChatById({ id }: { id: string }) {
   try {
-    const [selectedChat] = await db.select().from(chat).where(eq(chat.id, id));
+    const [selectedChat] = await db.select().from(chat).where(eq(chat.id as any, id));
     return selectedChat;
   } catch (error) {
     console.error("Failed to get chat by id from database");

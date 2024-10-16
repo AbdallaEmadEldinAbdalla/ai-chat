@@ -21,7 +21,7 @@ export const Navbar = async () => {
         <div className="flex flex-row gap-3 items-center">
           <History user={session?.user} />
           <div className="flex flex-row gap-2 items-center">
-            <div className="text-sm dark:text-zinc-300">Next.js Chatbot</div>
+            <div className="text-sm dark:text-zinc-300">Greenbull Chatbot</div>
           </div>
         </div>
 
@@ -61,9 +61,7 @@ export const Navbar = async () => {
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
-          <Button className="py-1.5 px-2 h-fit font-normal" asChild>
-            <Link href="/login">Login</Link>
-          </Button>
+          <></>
         )}
       </div>
     </>
