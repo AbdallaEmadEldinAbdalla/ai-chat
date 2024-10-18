@@ -128,6 +128,9 @@ export const History = ({ user }: { user: User | undefined }) => {
               <Button
                 className="font-normal text-sm flex flex-row justify-between"
                 asChild
+                onClick={() => {
+                  setIsHistoryVisible(false)
+                }}
               >
                 <Link href="/">
                   <div>Start a new chat</div>
@@ -178,6 +181,9 @@ export const History = ({ user }: { user: User | undefined }) => {
                         "hover:bg-zinc-200 dark:hover:bg-zinc-700 justify-between p-0 text-sm font-normal flex flex-row items-center gap-2 pr-2 w-full transition-none",
                       )}
                       asChild
+                      onClick={() => {
+                        setIsHistoryVisible(false)
+                      }}
                     >
                       <Link
                         href={`/chat/${chat.id}`}

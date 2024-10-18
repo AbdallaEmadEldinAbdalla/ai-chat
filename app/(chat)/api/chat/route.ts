@@ -17,8 +17,8 @@ const getContext = async (message: string) => {
 
   const retriever = new SupabaseHybridSearch(embeddings, {
     client,
-    similarityK: 2,
-    keywordK: 2,
+    similarityK: 1,
+    keywordK: 1,
     tableName: "documents",
     similarityQueryName: "match_documents",
     keywordQueryName: "kw_match_documents",
@@ -41,12 +41,14 @@ export async function POST(request: Request) {
 
   const coreMessages = convertToCoreMessages(messages);
 
-  const context = (await getContext(coreMessages[coreMessages.length - 1].content as string)).map(e => e.pageContent).join(', ')
+  const contextData = await getContext(coreMessages[coreMessages.length - 1].content as string);
+  const context = contextData.map(e => e.pageContent).join(', ');
+  const metadata = contextData.map(e => e.metadata); // Flatten the metadata array if needed
 
   const result = await streamText({
     model: customModel,
     system:
-      `You are a helpful and knowledgeable assistant that answers user queries strictly within the context: "${context}". Focus only on the information and guidelines specified by this context. Avoid unrelated content. Your responses should be concise, accurate, and directly relevant to the context provided. If the user asks for information beyond the specified context, politely guide them back to the context or clarify that you are restricted to discussing topics within the context. Maintain a professional tone and clear structure in your answers.`,
+      `You are a helpful and knowledgeable assistant that answers user queries strictly within the context: "${context}" in French unless the user asks for a different language. Please include the relevant metadata at the end of your response. Focus only on the information and guidelines specified by this context. Avoid unrelated content. Your responses should be concise, accurate, and directly relevant to the context provided. If the user asks for information beyond the specified context, politely guide them back to the context or clarify that you are restricted to discussing topics within the context. Maintain a professional tone and clear structure in your answers.\n\n`,
     messages: coreMessages,
     maxSteps: 5,
     onFinish: async ({ responseMessages }) => {

@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 import { auth, signOut } from "@/app/(auth)/auth";
 
 import { History } from "./history";
