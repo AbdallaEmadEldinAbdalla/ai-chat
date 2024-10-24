@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Message as PreviewMessage } from "@/components/custom/message";
 import { useScrollToBottom } from "@/components/custom/use-scroll-to-bottom";
 
+import { LoadingMessage } from "./loadingMessage";
 import { MultimodalInput } from "./multimodal-input";
 import { Overview } from "./overview";
 
@@ -40,14 +41,21 @@ export function Chat({
         >
           {messages.length === 0 && <Overview />}
 
-          {messages.map((message) => (
-            <PreviewMessage
-              key={message.id}
-              role={message.role}
-              content={message.content}
-              attachments={message.experimental_attachments}
-              toolInvocations={message.toolInvocations}
-            />
+          {messages.map((message, i, arr) => (
+            <>
+              <PreviewMessage
+                key={message.id}
+                role={message.role}
+                content={message.content}
+                attachments={message.experimental_attachments}
+                toolInvocations={message.toolInvocations}
+              />
+              {
+                arr.length - 1 === i && arr[arr.length - 1].role === 'user' ?
+                  <LoadingMessage />
+                  : <></>
+              }
+            </>
           ))}
 
           <div
